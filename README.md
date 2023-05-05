@@ -35,6 +35,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 ```
 
 while the Class diagram of `process_events.py` is shown next:
+
 <img src="images/class_diagram.png">
 
 This `__init__.py` first imports the logging module and the azure.functions module, which provides functionality for creating Azure Functions. The function creates an instance of the `event_handler` class named `p` and then calls two methods on it: `process_blobs()` and `store_processed_blobs()`. The `process_blobs()` method processes JSON data from blob files in the `lokadata` container, and the `store_processed_blobs()` method stores the resulting data in the `lokadataprocessed` container. On the other hand, The `event_handler` class contains several methods that handle different events related to the vehicles and their operating periods. For example, the `vehicle_register` method is called when a new vehicle is registered, and it creates a new row in the `df_vehicles` DataFrame with the vehicle's ID, latitude, longitude, registration date, and event type. Similarly, the `vehicle_update` method is called when a vehicle's location is updated, and it adds a new row to `df_vehicles` with the updated location information.
