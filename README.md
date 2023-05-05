@@ -89,6 +89,6 @@ Third, the solution is highly modular and customizable. The use of a Class in th
 
 The use of Microsoft Azure services, the end-to-end pipeline architecture, and the modularity and flexibility of the Python code make this solution an efficient and scalable approach to handling data in the cloud.
 
-## Disadvantages
+## Disadvantages of my approach
 
 The solution may not be accessible to some users due to the required expertise in Azure services and Python programming. The use of an Azure Function may introduce latency and processing overhead, which could affect system performance. The use of a relational database may limit the system's ability to handle unstructured or semi-structured data.
