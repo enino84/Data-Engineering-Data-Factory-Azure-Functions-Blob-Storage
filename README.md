@@ -77,5 +77,18 @@ The fourth activity is named "Copy - Events on Operating Period" and copies the 
 
 Overall, this pipeline fetches data from the "lokadata" container, processes it using an Azure Function, and stores the results in two SQL Server datasets for further analysis. The pipeline can be modified to match different source and destination locations, as well as different processing functions and data schemas. 
 
+# Advantages vs Disadvantages
 
+## Advantages of my approach:
 
+The advantages of this solution are many. First, it utilizes the power and flexibility of Microsoft Azure, which is a cloud computing platform that offers a wide range of services for data management, storage, processing, and analysis. Azure provides a robust and scalable infrastructure that can handle large volumes of data with ease, and it offers features such as automatic scaling, load balancing, and redundancy that ensure high availability and fault tolerance.
+
+Second, the solution uses a variety of Azure services to achieve a comprehensive and efficient approach to handling data in the cloud. The Storage account service is used as a data lake to store the data, and blobs are used to store the JSON files provided as input. The Data Factory service is used to copy the information into the data lake and to trigger an Azure Function for data formatting. The Azure Function formats the data and sends it to a blob storage in the form of CSV files, which are then consumed by a Copy data service from the Data Factory. Finally, a SQL Server is used as a data warehouse to store the data in a relational format, after all JSONs have been processed by the Azure Function. This end-to-end pipeline ensures that the data is processed efficiently and accurately, and that it is stored in a format that is easy to query and analyze.
+
+Third, the solution is highly modular and customizable. The use of a Class in the Python code allows for easy modification and extension of the functionality to handle different types of events or data sources. Moreover, the use of Pandas DataFrames and Azure Blob Storage makes it easy to manipulate the data in memory before storing it, and the structured event handling makes it easy to modify the function to handle new event types in the future. This modularity and flexibility are essential in a dynamic data environment where new data sources and formats can emerge at any time.
+
+The use of Microsoft Azure services, the end-to-end pipeline architecture, and the modularity and flexibility of the Python code make this solution an efficient and scalable approach to handling data in the cloud.
+
+## Disadvantages
+
+The solution may not be accessible to some users due to the required expertise in Azure services and Python programming. The use of an Azure Function may introduce latency and processing overhead, which could affect system performance. The use of a relational database may limit the system's ability to handle unstructured or semi-structured data.
