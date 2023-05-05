@@ -6,7 +6,7 @@ By Elías D. Nino-Ruiz - https://enino84.github.io/
 
 My solution is built on Microsoft Azure, a cloud computing platform, and it involves several services to manage data in the cloud. The *Storage* account service is used as a data lake and employs *blobs* to store the data. The *Data Factory* service is used to copy the information into the data lake and also to trigger an *Azure Function* for data formatting. The Azure Function formats the data and sends it to a *blob storage* in the form of csv files, which will be consumed by a Copy data service from the Data Factory. Finally, a *SQL Server* is used as a data warehouse to store the data in a relational format, after all JSONs have been processed by the Azure Function. Overall, this solution provides a comprehensive and efficient approach to handling data in the cloud, utilizing a variety of Azure services to achieve a robust and scalable architecture.
 
-## General Structure of the solution
+## General Structure of the Solution
 
 To facilitate the task at hand, I first created a resource group named "loka" that contains all the required services. Within this resource group, I created three containers:
 
@@ -47,6 +47,21 @@ The `process_blob` method is responsible for processing a single JSON blob. It f
 The `process_blobs` method is responsible for processing all blobs in the `lokadata` container. It first retrieves a list of all blobs in the container using the `list_blobs` method of the container client, then iterates over each blob and calls the `process_blob` method to handle the events contained in that blob.
 
 Finally, the `store_processed_blobs` method is responsible for uploading the processed data to the `lokadataprocessed` container in CSV format. It first creates an in-memory byte stream (`io.BytesIO`) containing the contents of each DataFrame as CSV, then uploads each byte stream as a blob to the appropriate location in the container using the `upload_blob` method of the blob client. This Azure function is responsible for processing incoming JSON data, extracting relevant events, and storing them in a relational database. The use of Pandas DataFrames and Azure Blob Storage makes it easy to manipulate the data in memory before storing it, and the structured event handling makes it easy to modify the function to handle new event types in the future.
+
+### Detailed View
+
+| Item | Description |
+| --- | --- |
+| Purpose | Processes events from JSON data stored in Azure Blob Storage and stores the results in two CSV files in Azure Blob Storage. |
+| Programming Language | Python |
+| External Libraries | `pandas`, `numpy`, `io`, `azure.storage.blob` |
+| Functions | `operating_period_create()`, `operating_period_delete()`, `vehicle_register()`, `vehicle_update()`, `vehicle_deregister()`, `process_event()`, `process_blob()`, `process_blobs()`, `store_processed_blobs()` |
+| Main Function | `main()` |
+| Parameters | `req`: an HTTP request object |
+| Returns | an HTTP response object |
+| Dependencies | Azure Blob Storage connection string and container name |
+| Output | Two CSV files in Azure Blob Storage: `vehicle_events.csv` and `operating_events.csv`. |
+| Description | This code reads JSON data stored in Azure Blob Storage, extracts relevant events from it, processes the events, and stores the results in two CSV files in Azure Blob Storage. The code defines five functions to process events (`operating_period_create()`, `operating_period_delete()`, `vehicle_register()`, `vehicle_update()`, and `vehicle_deregister()`), one function to process an event (`process_event()`), one function to process a blob (`process_blob()`), one function to process all blobs in a container (`process_blobs()`), and one function to store processed data in CSV files in Azure Blob Storage (`store_processed_blobs()`). The `main()` function calls these functions in sequence and returns an HTTP response object. The code relies on `pandas`, `numpy`, `io`, and `azure.storage.blob` libraries to read and write data in CSV format and to connect to Azure Blob Storage. The code is properly documented with comments and clear variable names. |
 
 ## Azure Data Factory
 
