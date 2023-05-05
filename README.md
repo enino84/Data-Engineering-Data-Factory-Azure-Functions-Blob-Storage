@@ -10,12 +10,11 @@ My solution is built on Microsoft Azure, a cloud computing platform, and it invo
 
 To facilitate the task at hand, I first created a resource group named "loka" that contains all the required services. Within this resource group, I created three containers:
 
-- `lokadatacopied` is used to emulate the data source and holds the JSON files provided by the user from the `s3://de-tech-assessment-2022` endpoint.
+- `lokadatacopied` is used to emulate the data source and holds the JSON files provided by you from the `s3://de-tech-assessment-2022` endpoint.
 
-- `lokadata` is used to copy the files from the `lokadatacopied` container. This container is filled by the "Copy - Blob to Blob" process, which emulates the process of copying data from a remote host, such as the s3 service to which I did not have access.
+- `lokadata` is used to copy the files from the `lokadatacopied` container. This container is filled by the "Copy - Blob to Blob" process, which emulates the process of copying data from a remote host.
 
 - `lokadataprocessed` stores the results of executing an Azure Function named `TimerTriggerProcessEvent`. This function formats the JSON files into a tabular format suitable for storage in a relational database, or data warehouse. The `TimerTriggerProcessEvent` function is based on two Python files: `__init__.py` and `process_events.py`. The `__init__.py` file contains the main function, which is as follows:
-
 
 ```python
 import logging
@@ -32,6 +31,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     p.store_processed_blobs()
     return func.HttpResponse("* Data processed.", status_code=200)
 ```
+
+This function first imports the logging module and the azure.functions module, which provides functionality for creating Azure Functions. It also imports the `event_handler` class from a module named process_events.
+
+The function creates an instance of the `event_handler` class named `p` and then calls two methods on it: `process_blobs()` and `store_processed_blobs()`. The `process_blobs()` method processes JSON data from blob files in the `lokadata` container, and the `store_processed_blobs()` method stores the resulting data in the `lokadataprocessed` container.
 
 
 <img src="images/general_pipeline.png">
