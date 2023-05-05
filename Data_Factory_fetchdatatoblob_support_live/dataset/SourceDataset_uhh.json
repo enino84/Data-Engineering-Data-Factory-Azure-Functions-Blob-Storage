@@ -1,0 +1,57 @@
+{
+    "name": "SourceDataset_uhh",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "AzureBlobStorage1",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "Json",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "container": "lokadata"
+            }
+        },
+        "schema": {
+            "type": "object",
+            "properties": {
+                "event": {
+                    "type": "string"
+                },
+                "on": {
+                    "type": "string"
+                },
+                "at": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "location": {
+                            "type": "object",
+                            "properties": {
+                                "lat": {
+                                    "type": "number"
+                                },
+                                "lng": {
+                                    "type": "number"
+                                },
+                                "at": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                },
+                "organization_id": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

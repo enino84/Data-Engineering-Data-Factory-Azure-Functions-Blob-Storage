@@ -1,0 +1,38 @@
+{
+    "name": "DWHLokaOperating",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "DatawarehouseLoka",
+            "type": "LinkedServiceReference"
+        },
+        "annotations": [],
+        "type": "SqlServerTable",
+        "schema": [
+            {
+                "name": "id",
+                "type": "varchar"
+            },
+            {
+                "name": "start",
+                "type": "datetime",
+                "precision": 23,
+                "scale": 3
+            },
+            {
+                "name": "finish",
+                "type": "datetime",
+                "precision": 23,
+                "scale": 3
+            },
+            {
+                "name": "event",
+                "type": "varchar"
+            }
+        ],
+        "typeProperties": {
+            "schema": "dbo",
+            "table": "operating_periods"
+        }
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

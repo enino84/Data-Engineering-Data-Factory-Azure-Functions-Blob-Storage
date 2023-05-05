@@ -1,0 +1,291 @@
+{
+    "name": "fetchdatatoblob",
+    "properties": {
+        "activities": [
+            {
+                "name": "Copy - Blob to Blob",
+                "type": "Copy",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [
+                    {
+                        "name": "Source",
+                        "value": "lokadata//"
+                    },
+                    {
+                        "name": "Destination",
+                        "value": "lokadatacopied//"
+                    }
+                ],
+                "typeProperties": {
+                    "source": {
+                        "type": "JsonSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "modifiedDatetimeStart": "2023-05-03T00:00:00Z",
+                            "wildcardFileName": "*",
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "JsonReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "JsonSink",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageWriteSettings"
+                        },
+                        "formatSettings": {
+                            "type": "JsonWriteSettings"
+                        }
+                    },
+                    "enableStaging": false,
+                    "validateDataConsistency": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "mappings": [
+                            {
+                                "source": {
+                                    "path": "$['event']"
+                                },
+                                "sink": {
+                                    "path": "$['event']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['on']"
+                                },
+                                "sink": {
+                                    "path": "$['on']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['at']"
+                                },
+                                "sink": {
+                                    "path": "$['at']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['data']['id']"
+                                },
+                                "sink": {
+                                    "path": "$['data']['id']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['data']['location']['lat']"
+                                },
+                                "sink": {
+                                    "path": "$['data']['location']['lat']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['data']['location']['lng']"
+                                },
+                                "sink": {
+                                    "path": "$['data']['location']['lng']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['data']['location']['at']"
+                                },
+                                "sink": {
+                                    "path": "$['data']['location']['at']"
+                                }
+                            },
+                            {
+                                "source": {
+                                    "path": "$['organization_id']"
+                                },
+                                "sink": {
+                                    "path": "$['organization_id']"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "SourceDataset_uhh",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "DestinationDataset_uhh",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "Azure Function - Process Events",
+                "type": "AzureFunctionActivity",
+                "dependsOn": [
+                    {
+                        "activity": "Copy - Blob to Blob",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "functionName": "TimerTriggerProcessEvent",
+                    "method": "GET",
+                    "headers": {
+                        "name": "Process"
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureFunctionProcessEvents",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                        "name": "Process"
+                    }
+                }
+            },
+            {
+                "name": "Copy - Events Vehicles",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Azure Function - Process Events",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "SqlServerSink",
+                        "writeBehavior": "insert",
+                        "sqlWriterUseTableLock": false
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "SourceDataProcessed",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "DWHLoka",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "Copy - Events on Operating Period",
+                "type": "Copy",
+                "dependsOn": [
+                    {
+                        "activity": "Azure Function - Process Events",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "source": {
+                        "type": "DelimitedTextSource",
+                        "storeSettings": {
+                            "type": "AzureBlobStorageReadSettings",
+                            "recursive": true,
+                            "enablePartitionDiscovery": false
+                        },
+                        "formatSettings": {
+                            "type": "DelimitedTextReadSettings"
+                        }
+                    },
+                    "sink": {
+                        "type": "SqlServerSink",
+                        "writeBehavior": "insert",
+                        "sqlWriterUseTableLock": false
+                    },
+                    "enableStaging": false,
+                    "translator": {
+                        "type": "TabularTranslator",
+                        "typeConversion": true,
+                        "typeConversionSettings": {
+                            "allowDataTruncation": true,
+                            "treatBooleanAsNumber": false
+                        }
+                    }
+                },
+                "inputs": [
+                    {
+                        "referenceName": "SourceDataOperating",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "DWHLokaOperating",
+                        "type": "DatasetReference"
+                    }
+                ]
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2023-05-05T05:30:29Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

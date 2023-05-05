@@ -1,0 +1,6 @@
+selected resource name:		fetchdatatoblob
+selected resource type:		pipeline
+factory name:			lokaetl
+factory location:		eastus
+subscription id:		ff322946-8f03-4495-9c32-69d04be70a48
+time of download (UTC):		Fri, 05 May 2023 06:26:01 GMT
