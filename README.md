@@ -9,3 +9,7 @@ My solution is built on Microsoft Azure, a cloud computing platform, and it invo
 ## General Structure of the solution
 
 <img src="images/general_pipeline.png">
+
+## Handler Function
+
+<img src="images/class_diagram.png">
