@@ -48,6 +48,19 @@ The `process_blobs` method is responsible for processing all blobs in the `lokad
 
 Finally, the `store_processed_blobs` method is responsible for uploading the processed data to the `lokadataprocessed` container in CSV format. It first creates an in-memory byte stream (`io.BytesIO`) containing the contents of each DataFrame as CSV, then uploads each byte stream as a blob to the appropriate location in the container using the `upload_blob` method of the blob client. This Azure function is responsible for processing incoming JSON data, extracting relevant events, and storing them in a relational database. The use of Pandas DataFrames and Azure Blob Storage makes it easy to manipulate the data in memory before storing it, and the structured event handling makes it easy to modify the function to handle new event types in the future.
 
-
 ## Azure Data Factory
+
+The Data Factory pipeline is named "fetchdatatoblob" and contains several activities that copy data from one location to another and process it.
+
+The first activity is named "Copy - Blob to Blob" and copies JSON data from the "lokadata" container to the "lokadatacopied" container in Azure Blob Storage. This activity uses a JSON source and sink, and a tabular translator to map the JSON fields to columns in the destination dataset.
+
+The second activity is an Azure Function activity named "Azure Function - Process Events". This activity calls an Azure Function named "TimerTriggerProcessEvent" with an HTTP GET method and a "Process" header. This function processes the JSON data that was copied in the previous activity and extracts relevant events from it.
+
+The third activity is named "Copy - Events Vehicles" and copies the extracted vehicle-related events to a SQL Server sink dataset named "DWHLoka". This activity uses a delimited text source, a tabular translator, and enables type conversion to map the data fields to SQL columns.
+
+The fourth activity is named "Copy - Events on Operating Period" and copies the extracted operating-period-related events to another SQL Server sink dataset named "DWHLokaOperating". This activity also uses a delimited text source, a tabular translator, and enables type conversion to map the data fields to SQL columns.
+
+Overall, this pipeline fetches data from the "lokadata" container, processes it using an Azure Function, and stores the results in two SQL Server datasets for further analysis. The pipeline can be modified to match different source and destination locations, as well as different processing functions and data schemas. 
+
+
 
