@@ -84,7 +84,7 @@ I utilized Visual Studio Code for local development of the Azure Function and th
 
 Azure Data Studio provided an intuitive interface for navigating databases and tables, making it easy to verify the success of the data pipeline and confirm that formatted data was successfully sent to the SQL Server tables.
 
-The GitHub Desktop client streamlined the version control process, making it easier to track changes and collaborate with team members. This helped ensure a smooth and organized development process.
+The GitHub Desktop client streamlined the version control process, making it easier to track changes. This helped ensure a smooth and organized development process.
 
 # Advantages vs Disadvantages
 
