@@ -1,4 +1,5 @@
 # Data Engineering - Tech Assessment
+---
 
 By Elías D. Nino-Ruiz - https://enino84.github.io/
 
@@ -76,6 +77,14 @@ The third activity is named "Copy - Events Vehicles" and copies the extracted ve
 The fourth activity is named "Copy - Events on Operating Period" and copies the extracted operating-period-related events to another SQL Server sink dataset named "DWHLokaOperating". This activity also uses a delimited text source, a tabular translator, and enables type conversion to map the data fields to SQL columns.
 
 Overall, this pipeline fetches data from the "lokadata" container, processes it using an Azure Function, and stores the results in two SQL Server datasets for further analysis. The pipeline can be modified to match different source and destination locations, as well as different processing functions and data schemas. 
+
+## Local Tools
+
+I utilized Visual Studio Code for local development of the Azure Function and then deployed it to the cloud. This allowed for efficient development and testing before deployment, ensuring a smoother process and reducing the likelihood of errors.
+
+Azure Data Studio provided an intuitive interface for navigating databases and tables, making it easy to verify the success of the data pipeline and confirm that formatted data was successfully sent to the SQL Server tables.
+
+The GitHub Desktop client streamlined the version control process, making it easier to track changes and collaborate with team members. This helped ensure a smooth and organized development process.
 
 # Advantages vs Disadvantages
 
